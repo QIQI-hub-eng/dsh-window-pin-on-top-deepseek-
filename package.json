@@ -1,0 +1,52 @@
+{
+  "name": "@local/dsh-window-pin-on-top",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Pin button beside the Windows minimize control that keeps the Harness window above other windows.",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "always-on-top",
+    "window-pin",
+    "windows"
+  ],
+  "license": "MIT",
+  "author": "QIQI-hub-eng",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QIQI-hub-eng/dsh-window-pin-on-top-deepseek-.git"
+  },
+  "homepage": "https://github.com/QIQI-hub-eng/dsh-window-pin-on-top-deepseek-#readme",
+  "bugs": {
+    "url": "https://github.com/QIQI-hub-eng/dsh-window-pin-on-top-deepseek-/issues"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "README.zh.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": ["@deepseek-ai/dsh-client-ui-layout"]
+    }
+  },
+  "engines": {
+    "node": ">=20",
+    "dsh": ">=0.2.1-rc.5 <0.3.0"
+  }
+}

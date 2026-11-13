@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "窗口置顶",
+    "description": "在 Windows 最小化按钮左侧添加置顶按钮，让 Harness 窗口保持在其他窗口之上。"
+  }
+}

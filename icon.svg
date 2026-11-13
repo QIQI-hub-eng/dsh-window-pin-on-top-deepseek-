@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Window pin on top">
+  <rect x="2" y="2" width="124" height="124" rx="30" fill="#EDF1FF"/>
+  <path d="M32 22h64" fill="none" stroke="#B7C6FF" stroke-width="7" stroke-linecap="round"/>
+  <g fill="none" stroke="#4D6BFE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M46 40h36"/>
+    <path d="M54 40v16L42 70h44L74 56V40"/>
+    <path d="M64 70v25"/>
+  </g>
+</svg>

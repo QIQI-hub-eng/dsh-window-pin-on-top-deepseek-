@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Window pin on top",
+    "description": "Adds a pin control beside the Windows minimize button that keeps the Harness window above other windows."
+  }
+}
