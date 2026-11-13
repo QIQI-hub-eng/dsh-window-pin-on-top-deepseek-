@@ -117,7 +117,14 @@ window.__ModuleLoader__.load({
   color: var(--dsw-alias-label-secondary);
   cursor: default;
   -webkit-app-region: no-drag;
-  transition: background-color 120ms var(--ds-ease-out, ease-out), color 120ms var(--ds-ease-out, ease-out);
+  position: relative;
+  transition:
+    background-color 140ms var(--ds-ease-out, ease-out),
+    color 140ms var(--ds-ease-out, ease-out),
+    transform 120ms var(--ds-ease-out, ease-out);
+}
+.dsh-window-pin-button:active {
+  transform: scale(0.92);
 }
 .dsh-window-pin-button:hover {
   background: color-mix(in srgb, var(--dsw-alias-label-primary) 9%, transparent);
@@ -137,8 +144,48 @@ window.__ModuleLoader__.load({
 .dsh-window-pin-button[data-busy="true"] {
   opacity: 0.55;
 }
+.dsh-window-pin-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+.dsh-window-pin-glyph[data-motion="pin"] {
+  animation: dsh-window-pin-stick 320ms cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+}
+.dsh-window-pin-glyph[data-motion="unpin"] {
+  animation: dsh-window-pin-release 240ms cubic-bezier(0.35, 0, 0.25, 1) both;
+}
+.dsh-window-pin-glow {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--dsw-alias-brand-primary) 45%, transparent) 0%, transparent 72%);
+  animation: dsh-window-pin-glow 420ms ease-out forwards;
+}
+@keyframes dsh-window-pin-stick {
+  0% { transform: translateY(-3px) scale(1.03); }
+  42% { transform: translateY(2px) scale(0.9); }
+  68% { transform: translateY(-0.5px) scale(1.06); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes dsh-window-pin-release {
+  0% { transform: translateY(0) scale(1); }
+  38% { transform: translateY(-3.5px) scale(0.93); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes dsh-window-pin-glow {
+  0% { opacity: 0.55; transform: scale(0.6); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
 @media (prefers-reduced-motion: reduce) {
   .dsh-window-pin-button { transition: none; }
+  .dsh-window-pin-button:active { transform: none; }
+  .dsh-window-pin-glyph[data-motion="pin"],
+  .dsh-window-pin-glyph[data-motion="unpin"],
+  .dsh-window-pin-glow { animation: none; }
 }
 `
 
@@ -159,6 +206,7 @@ window.__ModuleLoader__.load({
       const [pinned, setPinned] = React.useState(false)
       const [ready, setReady] = React.useState(false)
       const [busy, setBusy] = React.useState(false)
+      const [motion, setMotion] = React.useState({ kind: 'idle', seq: 0 })
 
       React.useEffect(() => {
         const update = () => setCaptionWidth(readCaptionWidth())
@@ -198,8 +246,15 @@ window.__ModuleLoader__.load({
         setBusy(true)
         callHost('toggle')
           .then((report) => {
-            if (report !== null && typeof report === 'object' && report.ok === true) setPinned(report.topmost === true)
-            else console.error('[window-pin-on-top] toggle failed', report)
+            if (report !== null && typeof report === 'object' && report.ok === true) {
+              const next = report.topmost === true
+              setPinned(next)
+              // A key change on the glyph restarts its keyframes, so rapid
+              // toggles replay the motion instead of being ignored.
+              setMotion((current) => ({ kind: next ? 'pin' : 'unpin', seq: current.seq + 1 }))
+            } else {
+              console.error('[window-pin-on-top] toggle failed', report)
+            }
           })
           .catch((error) => console.error('[window-pin-on-top] toggle request failed', error))
           .finally(() => setBusy(false))
@@ -226,7 +281,19 @@ window.__ModuleLoader__.load({
           onClick: toggle,
           // Keep the caption strip's drag behavior from stealing the click.
           onPointerDown: (event) => event.stopPropagation(),
-        }, h(PinGlyph)),
+        },
+          motion.kind === 'pin' ? h('span', {
+            key: `glow-${motion.seq}`,
+            className: 'dsh-window-pin-glow',
+            'aria-hidden': true,
+          }) : null,
+          h('span', {
+            key: `glyph-${motion.seq}`,
+            className: 'dsh-window-pin-glyph',
+            'data-motion': motion.kind,
+            'aria-hidden': true,
+          }, h(PinGlyph)),
+        ),
       )
     }
 

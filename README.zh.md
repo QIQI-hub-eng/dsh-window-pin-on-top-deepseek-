@@ -53,6 +53,7 @@ git clone https://github.com/QIQI-hub-eng/dsh-window-pin-on-top-deepseek-.git
 ## 使用
 
 - 点图钉 = 窗口置顶；再点 = 取消。
+- 点击有回应：置顶时图钉向下"按下、钉住"，取消时向上抬起再落回，同时有一层品牌色的柔光扩散确认状态；按钮按下时整体轻微缩小。系统开启"减少动态效果"（`prefers-reduced-motion: reduce`）时这些动画自动关闭。
 - 置顶时图标变成主题的品牌色并带浅色底；悬停有提示，跟随界面语言（中文 / English）。
 - 挂载时会向 Host 查询真实窗口状态，所以不会出现"界面显示已置顶、实际没有"的情况。
 

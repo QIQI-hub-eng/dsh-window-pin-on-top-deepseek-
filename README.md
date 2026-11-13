@@ -65,6 +65,10 @@ pick up a change.
 ## Use
 
 - Click the pin to keep the window above other windows; click again to release it.
+- The button answers the click: the pin presses down and sticks when it pins,
+  lifts and settles when it releases, and a soft brand-tinted glow confirms the
+  change. The motion is skipped under `prefers-reduced-motion: reduce`, and the
+  pressed state scales the button down for a tactile feel.
 - The pinned state is tinted with the theme's brand color; hovering any time
   shows a tooltip in the interface language (中文 / English).
 - The plugin reports the *real* window state on mount, so it never shows
